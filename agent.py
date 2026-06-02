@@ -21,7 +21,8 @@ log = logging.getLogger(__name__)
 GMAIL_USER     = os.environ["GMAIL_USER"]
 GMAIL_PASSWORD = os.environ["GMAIL_PASSWORD"]
 ANTHROPIC_KEY  = os.environ["ANTHROPIC_API_KEY"]
-NOTIFY_EMAIL   = os.environ["NOTIFY_EMAIL"]
+TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
+TELEGRAM_TOKEN   = os.environ["TELEGRAM_TOKEN"]
 CHECK_INTERVAL = int(os.environ.get("CHECK_INTERVAL", "60"))
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
