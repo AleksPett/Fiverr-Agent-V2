@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import time
+import urllib.request
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import anthropic
@@ -105,16 +106,17 @@ def solve_task(task, order_id, customer):
     )
     return resp.content[0].text
 
-def send_email(subject, body):
-    msg = MIMEMultipart()
-    msg["From"] = GMAIL_USER
-    msg["To"] = NOTIFY_EMAIL
-    msg["Subject"] = f"[Fiverr Agent] {subject}"
-    msg.attach(MIMEText(body, "plain", "utf-8"))
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-        s.login(GMAIL_USER, GMAIL_PASSWORD)
-        s.send_message(msg)
-
+def send_telegram(message):
+    token = os.environ["TELEGRAM_TOKEN"]
+    chat_id = os.environ["TELEGRAM_CHAT_ID"]
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = json.dumps({
+        "chat_id": chat_id,
+        "text": message
+    }).encode("utf-8")
+    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    urllib.request.urlopen(req)
+    
 def process(mail):
     log.info(f"Behandler: {mail['subject']}")
     details = extract_task(mail["subject"], mail["body"])
@@ -136,7 +138,7 @@ def process(mail):
         f"--- LEVERANSE ---\n{delivery}\n-----------------\n\n"
         "Ga inn pa Fiverr og lever dette til kunden."
     )
-    send_email(f"Ordre {order_id} klar til levering", notification)
+    send_telegram(f"Ordre {order_id} klar til levering", notification)
     log.info(f"Ordre {order_id} ferdig.")
 
 def main():
@@ -153,7 +155,7 @@ def main():
         except Exception as e:
             log.error(f"Feil: {e}")
             try:
-                send_email("Agent-feil", f"Noe gikk galt:\n{e}")
+                send_telegram("Agent-feil", f"Noe gikk galt:\n{e}")
             except Exception:
                 pass
         time.sleep(CHECK_INTERVAL)
