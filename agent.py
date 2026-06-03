@@ -56,7 +56,7 @@ def get_body(msg):
 def fetch_unseen_fiverr():
     mail = imap_connect()
     mail.select("inbox")
-    _, data = mail.search(None, '(UNSEEN FROM "fiverr.com")')
+    _, data = mail.search(None, '(UNSEEN)')
     ids = data[0].split()
     results = []
     for eid in ids:
