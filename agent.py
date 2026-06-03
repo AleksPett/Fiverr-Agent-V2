@@ -154,11 +154,7 @@ def main():
             else:
                 log.info("Ingen nye Fiverr-eposter.")
         except Exception as e:
-            log.error(f"Feil: {e}")
-            try:
-                send_telegram("Agent-feil", f"Noe gikk galt:\n{e}")
-            except Exception:
-                pass
+            log.error(f"Feil: {e}", exc_info=True)
         time.sleep(CHECK_INTERVAL)
 
 if __name__ == "__main__":
