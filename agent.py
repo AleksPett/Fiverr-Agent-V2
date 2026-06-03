@@ -154,7 +154,8 @@ def main():
             else:
                 log.info("Ingen nye Fiverr-eposter.")
         except Exception as e:
-            log.error(f"Feil: {e}", exc_info=True)
+    log.error(f"Feil: {type(e).__name__}: {e}", exc_info=True)
+    time.sleep(10)
         time.sleep(CHECK_INTERVAL)
 
 if __name__ == "__main__":
