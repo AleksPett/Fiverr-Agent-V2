@@ -139,7 +139,7 @@ def process(mail):
         f"--- LEVERANSE ---\n{delivery}\n-----------------\n\n"
         "Ga inn pa Fiverr og lever dette til kunden."
     )
-    send_telegram(f"Ordre {order_id} klar til levering", notification)
+    send_telegram(f"Ordre {order_id} klar til levering\n\n{notification}")
     log.info(f"Ordre {order_id} ferdig.")
 
 def main():
